@@ -1,30 +1,33 @@
+" under construction to replace as much as possible with init.lua
+lua require('init')
+
 "
 " PLUGIN START
 "
 call plug#begin(stdpath('data') . '/plugged')
 
-Plug 'williamboman/mason.nvim'
+" Plug 'williamboman/mason.nvim'
 
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'kassio/neoterm'
-Plug 'preservim/nerdtree'
-Plug 'itchyny/lightline.vim'
+" Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-fugitive'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
+" Plug 'kassio/neoterm'
+" Plug 'preservim/nerdtree'
+" Plug 'itchyny/lightline.vim'
 
-" Language-specific
+" " Language-specific
 
-" See https://github.com/numirias/semshi for install instructions:
-" $ pip3 install pynvim --upgrade
-Plug 'numirias/semshi', { 'do': { -> ':UpdateRemotePlugins' } }
+" " See https://github.com/numirias/semshi for install instructions:
+" " $ pip3 install pynvim --upgrade
+" Plug 'numirias/semshi', { 'do': { -> ':UpdateRemotePlugins' } }
 
-" Colors
-Plug 'EdenEast/nightfox.nvim'
-Plug 'ayu-theme/ayu-vim'
-Plug 'bluz71/vim-nightfly-guicolors'
-Plug 'dracula/vim', { 'name': 'dracula' }
+" " Colors
+" Plug 'EdenEast/nightfox.nvim'
+" Plug 'ayu-theme/ayu-vim'
+" Plug 'bluz71/vim-nightfly-guicolors'
+" Plug 'dracula/vim', { 'name': 'dracula' }
 
 call plug#end()
 
