@@ -57,7 +57,7 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # Generic environment variables
 export PATH=$HOME/.dotfiles/scripts:$PATH
-export EDITOR=/usr/bin/nvim
+export EDITOR=nvim
 
 alias python=python3
 
@@ -70,6 +70,11 @@ alias mv="mv -i"
 alias ll="ls -Ahl"
 alias l="ls -Ghl"
 alias la="ls -Acltr"
+
+# cabal
+alias crepl="cabal repl"
+alias crun="cabal run"
+alias cbuild="cabal build"
 
 # ghcup
 [ -f "/home/typesafety/.ghcup/env" ] && source "/home/typesafety/.ghcup/env" # ghcup-env

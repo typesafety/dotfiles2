@@ -24,7 +24,7 @@ call plug#begin(stdpath('data') . '/plugged')
 " Plug 'numirias/semshi', { 'do': { -> ':UpdateRemotePlugins' } }
 
 " " Colors
-" Plug 'EdenEast/nightfox.nvim'
+Plug 'EdenEast/nightfox.nvim'
 " Plug 'ayu-theme/ayu-vim'
 " Plug 'bluz71/vim-nightfly-guicolors'
 " Plug 'dracula/vim', { 'name': 'dracula' }
