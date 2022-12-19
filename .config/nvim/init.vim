@@ -4,7 +4,7 @@ lua require('init')
 "
 " PLUGIN START
 "
-call plug#begin(stdpath('data') . '/plugged')
+" call plug#begin(stdpath('data') . '/plugged')
 
 " Plug 'williamboman/mason.nvim'
 
@@ -24,12 +24,12 @@ call plug#begin(stdpath('data') . '/plugged')
 " Plug 'numirias/semshi', { 'do': { -> ':UpdateRemotePlugins' } }
 
 " " Colors
-Plug 'EdenEast/nightfox.nvim'
+" Plug 'EdenEast/nightfox.nvim'
 " Plug 'ayu-theme/ayu-vim'
 " Plug 'bluz71/vim-nightfly-guicolors'
 " Plug 'dracula/vim', { 'name': 'dracula' }
 
-call plug#end()
+" call plug#end()
 
 "
 " PLUGIN STOP
@@ -43,22 +43,22 @@ call plug#end()
 set termguicolors
 
 " ayu
-let ayucolor='mirage'
+" let ayucolor='mirage'
 
 " nightfly
-let g:nightflyCursorColor = 1
-let g:nightflyItalics = 0
-let g:nightflyUnderlineMatchParen = 1
+" let g:nightflyCursorColor = 1
+" let g:nightflyItalics = 0
+" let g:nightflyUnderlineMatchParen = 1
 
 " semshi
-let g:semshi#simplify_markup = v:false
-let g:semshi#error_sign_delay = 2
-let g:semshi#update_delay_factor = 0.0001
+" let g:semshi#simplify_markup = v:false
+" let g:semshi#error_sign_delay = 2
+" let g:semshi#update_delay_factor = 0.0001
 
 " Set the chosen color scheme (any configuration of comes before this).
 " Use a simpler color scheme with termguicolors OFF if using without a GUI
 " (over putty for example).
-colorscheme nightfox
+" colorscheme nightfox
 
 "
 " General options
@@ -79,7 +79,7 @@ filetype plugin indent on
 
 " Highlight current line
 set cursorline
-hi CursorLine cterm=none ctermbg=238
+hi CursorLine cterm=none
 
 " Width of gutter
 set numberwidth=5
@@ -96,8 +96,7 @@ augroup END
 highlight LineNr ctermfg=Grey guifg=Grey
 
 " Color in the column at the specified width.
-set colorcolumn=80,100
-highlight ColorColumn ctermbg=238
+set colorcolumn=80,100,120
 
 " Display tabs and trailing whitespace.
 set list listchars=tab:\›\ ,trail:·,extends:>,precedes:<
@@ -107,7 +106,7 @@ function TrimWhitespace()
   %s/\(^--\)\@<!\s*$//g
   ''
 endfunction
-" Bound to a key combination instead of a command, since that seems to mess up
+" Bound to a key combination instead of an autocmd, since that seems to mess up
 " the undo history:
 " autocmd BufWritePre * if !&binary | call TrimWhitespace() | endif
 
@@ -157,7 +156,7 @@ nnoremap <A-k> <C-w>k
 nnoremap <A-j> <C-w>j
 
 " Reload this init.vim file.
-" nnoremap <leader>sv :source $HOME/.config/nvim/init.vim<CR>
+nnoremap <leader>sv :source $HOME/.config/nvim/init.vim<CR>
 
 " Remember the last used position.
 autocmd BufReadPost *
@@ -189,18 +188,19 @@ nnoremap <silent> <C-l> :call ToggleNumberStyle()<CR>
 "
 
 " neoterm
-let g:neoterm_default_mod = 'botright'
+" let g:neoterm_default_mod = 'botright'
 
-" Set lightline configuration
-let g:lightline = {
-      \ 'colorscheme': 'nightfox',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'readonly', 'absolutepath', 'modified'] ]
-      \ },
-      \ }
+" Set lightline configuration  (TODO: set up lualine)
+" let g:lightline = {
+"       \ 'colorscheme': 'nightfox',
+"       \ 'active': {
+"       \   'left': [ [ 'mode', 'paste' ],
+"       \             [ 'readonly', 'absolutepath', 'modified'] ]
+"       \ },
+"       \ }
+
 " don't show duplicate -- INSERT -- text (lightline covers this)
-set noshowmode
+" set noshowmode
 
 " Toggle NERDTree panel
 nnoremap <C-n> :NERDTreeToggle<CR>
