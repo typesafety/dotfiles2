@@ -17,14 +17,36 @@ local capabilities = vim.tbl_deep_extend(
     cmp_capabilities, selection_range_capabilities
 )
 
+
 --
 -- General LSP config setup (TODO: move somewhere else so it can be reused).
 --
 
 -- Diagnostics configuration.
 vim.diagnostic.config({
-    virtual_text = false,  -- Inline text.
+    virtual_text = false,
+    signs = false,
+    underline = false,
 })
+
+-- Only show new diagnostics on buffer write.
+local ns = vim.api.nvim_create_namespace('my_test_namespace')
+
+function show_diagnostics(bufnr)
+    local diags = vim.diagnostic.get(bufnr)
+    vim.diagnostic.show(ns, bufnr, diags, {
+        virtual_text = false,
+        signs = true,
+        underline = true,
+    })
+end
+
+vim.cmd [[
+augroup test
+    autocmd!
+    autocmd BufWritePost * lua show_diagnostics(tonumber(vim.fn.expand('<abuf>')))
+augroup END
+]]
 
 -- Open a diagnostics floating window for the currently hovered over symbol.
 vim.keymap.set('n', 'L', function()
@@ -117,12 +139,6 @@ ht.setup {
         log = {
             level = vim.log.levels.DEBUG,
         },
-        codeLens = {
-            autoRefresh = true,
-        },
-        hoogle = {
-            mode= 'auto',
-        },
     },
 
     -- HLS settings.
@@ -151,11 +167,6 @@ ht.setup {
             haskell = {
                 cabalFormattingProvider = 'cabalfmt',
                 formattingProvider = 'fourmolu',
-                plugin = {
-                    importLens = {
-                        globalOn = false,
-                    },
-                }
             }
         }
     },
