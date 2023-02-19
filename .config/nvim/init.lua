@@ -26,6 +26,9 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     -- LSP
     {
+        'neovim/nvim-lspconfig',
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
     },
@@ -35,7 +38,7 @@ local plugins = {
             {
                 'nvim-lua/plenary.nvim',
             },
-        }
+        },
     },
     {
         'hrsh7th/nvim-cmp',
@@ -72,8 +75,26 @@ local plugins = {
         'JoosepAlviste/nvim-ts-context-commentstring',
         dependencies = {
             'nvim-treesitter/nvim-treesitter',
-        }
-    }
+        },
+    },
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = {
+            {
+                'nvim-lua/plenary.nvim',
+            },
+        },
+    },
+
+    -- Language-specific
+    {
+        'mrcjkb/haskell-tools.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+        },
+    },
+
 }
 
 require('lazy').setup(plugins)
@@ -82,6 +103,8 @@ require('lazy').setup(plugins)
 -- Load plugins.  Each plugin file should define settings for it.
 --
 
+require('plugins/haskell-tools_nvim')
+require('plugins/nvim-lspconfig')
 require('plugins/mini_comment')
 require('plugins/null-ls_nvim')
 require('plugins/nvim-cmp')
@@ -180,7 +203,7 @@ vim.g.markdown_recommended_style = 0
 vim.keymap.set('n', '<leader>L', '<cmd>Lazy<cr>')
 
 -- Reload the config.
-vim.keymap.set('n', '<leader>rr', '<cmd>source ~/.config/nvim/init.lua<cr>')
+vim.keymap.set('n', '<leader>re', '<cmd>source ~/.config/nvim/init.lua<cr>')
 
 -- Switch between windows.
 vim.keymap.set('n', '<A-l>', '<C-w>l')
