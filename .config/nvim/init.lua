@@ -94,7 +94,6 @@ local plugins = {
             'nvim-telescope/telescope.nvim',
         },
     },
-
 }
 
 require('lazy').setup(plugins)
@@ -280,20 +279,20 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 -- Close some window tyeps with <esc>.
 -- https://www.lazyvim.org/configuration/general#auto-commands
 vim.api.nvim_create_autocmd('FileType', {
-  group = augroup('close_with_q'),
-  pattern = {
-    'PlenaryTestPopup',
-    'help',
-    'lspinfo',
-    'man',
-    'notify',
-    'qf',
-    'spectre_panel',
-    'startuptime',
-    'tsplayground',
-  },
-  callback = function(event)
-    vim.bo[event.buf].buflisted = false
-    vim.keymap.set('n', '<esc>', '<cmd>close<cr>', { buffer = event.buf, silent = true })
-  end,
+    group = augroup('close_with_esc'),
+    pattern = {
+        'PlenaryTestPopup',
+        'help',
+        'lspinfo',
+        'man',
+        'notify',
+        'qf',
+        'spectre_panel',
+        'startuptime',
+        'tsplayground',
+    },
+    callback = function(event)
+        vim.bo[event.buf].buflisted = false
+        vim.keymap.set('n', '<esc>', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+    end,
 })

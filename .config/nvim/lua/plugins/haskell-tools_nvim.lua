@@ -17,8 +17,29 @@ local capabilities = vim.tbl_deep_extend(
     cmp_capabilities, selection_range_capabilities
 )
 
--- Open diagnostics float for symbol.
-vim.keymap.set('n', 'L', vim.diagnostic.open_float, def_opts)
+--
+-- General LSP config setup (TODO: move somewhere else so it can be reused).
+--
+
+-- Diagnostics configuration.
+vim.diagnostic.config({
+    virtual_text = false,  -- Inline text.
+})
+
+-- Open a diagnostics floating window for the currently hovered over symbol.
+vim.keymap.set('n', 'L', function()
+    -- Make the preview/float window closable with <esc> after entering.
+    --
+    -- When entering the window, add a new keybind that:
+    --
+    -- 1. Immediately unbinds itself, so that it's not
+    -- 2. Closes the window with the newly opened window's ID.
+    local float_bufnr, win_id = vim.diagnostic.open_float()
+    vim.keymap.set('n', '<esc>', function()
+        vim.keymap.del('n', '<esc>', { buffer = float_bufnr })
+        vim.api.nvim_win_close(win_id, false)
+    end, { buffer = float_bufnr })
+end, def_opts)
 
 -- Go to next/prev diagnostics.
 vim.keymap.set('n', '<C-k>', vim.diagnostic.goto_prev, def_opts)
@@ -26,30 +47,22 @@ vim.keymap.set('n', '<C-j>', vim.diagnostic.goto_next, def_opts)
 
 vim.keymap.set('n', '<space>ll', vim.diagnostic.setloclist, def_opts)
 
-
-function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-end
-
-
 local function on_attach(client_id, bufnr)
     local opts = vim.tbl_extend('keep', def_opts, { buffer = bufnr, })
     -- haskell-language-server relies heavily on codeLenses,
     -- so auto-refresh (see advanced configuration) is enabled by default
 
+    --
     -- haskell-tools mappings.
+    --
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
     vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
     vim.keymap.set('n', '<leader>eva', ht.lsp.buf_eval_all, opts)
+
+    --
+    -- General LSP config setup.
+    --
+
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
     -- nvim LSP mappings
@@ -95,6 +108,10 @@ local function on_attach(client_id, bufnr)
 
 end
 
+--
+-- haskell-tools settings (wraps HSL settings, see the `hls` subtable).
+--
+
 ht.setup {
     tools = {
         log = {
@@ -108,6 +125,7 @@ ht.setup {
         },
     },
 
+    -- HLS settings.
     hls = {
         on_attach = function(client_id, bufnr)
             local success, err = pcall(on_attach, client_id, bufnr)
