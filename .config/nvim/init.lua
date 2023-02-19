@@ -1,5 +1,9 @@
 -- Set this first.
 vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
+-- Make the normal behavior of space a noop.
+vim.keymap.set('n', '<space>', '<nop>')
 
 -- Bootstrapping the package manager, if needed.
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
@@ -104,188 +108,164 @@ vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.smarttab = true
 vim.opt.shiftround = true
+vim.opt.tabstop = 4
+
+-- Turn on the mouse.
+vim.opt.mouse = 'a'
+
+-- Make splits open in the right place (to the right and to the bottom).
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+
+-- Incremental highlighting for commands.
+vim.opt.inccommand = 'split'
+
+-- Don't want to automatically insert comment leaders after using `o` in
+-- normal mode.  Doesn't work without the autocmd for some freak reason.
+vim.cmd [[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o formatoptions+=j formatoptions+=q]]
+
+-- Highlight curent line
+vim.opt.cursorline = true
+
+-- Rulers
+vim.opt.colorcolumn = {80; 120}
+
+-- Show interesting whitespace characters.
+-- (TODO: these don't work, font issue?)
+vim.opt.list = true
+vim.opt.listchars['trail'] = '·'
+vim.opt.listchars['tab'] = '›'
+
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+-- Do not use autowrite.
+vim.opt.autowrite = false
+
+-- Do not sync clipboard to the system clipboard.
+vim.opt.clipboard = ''
+
+-- grep options.
+vim.opt.grepformat = "%f:%l:%c:%m"
+vim.opt.grepprg = "rg --vimgrep"  -- Requires ripgrep
+
+-- Use relative line numbers.
+vim.opt.number = true
+vim.opt.relativenumber = true
+
+-- Hide the mode since we have a statusline.
+vim.opt.showmode = true  -- Change to `false` once a statusline is installed.
+
+-- Always show the sign column to avoid the screen skip left and right.
+vim.opt.signcolumn = 'yes'
+
+vim.opt.smartindent = true
+
+-- Keep undo history after closing the buffer.
+vim.opt.undofile = true
+vim.opt.undolevels = 10000
+vim.opt.updatetime = 5000
+
+-- Wrapping of long lines.
+vim.opt.wrap = true
+
+-- This is good supposedly.
+vim.g.markdown_recommended_style = 0
 
 --
 -- Keymaps
 --
 
 -- Open Lazy menu
-vim.keymap.set('n', '<leader>L', ':Lazy<cr>')
-
---
--- Functions.
---
+vim.keymap.set('n', '<leader>L', '<cmd>Lazy<cr>')
 
 -- Reload the config.
-function RR()
-    vim.api.nvim_cmd({
-        cmd = ':source',
-        args = {'~/.config/nvim/init.lua'},
-    }, {})
+vim.keymap.set('n', '<leader>rr', '<cmd>source ~/.config/nvim/init.lua<cr>')
+
+-- Switch between windows.
+vim.keymap.set('n', '<A-l>', '<C-w>l')
+vim.keymap.set('n', '<A-h>', '<C-w>h')
+vim.keymap.set('n', '<A-k>', '<C-w>k')
+vim.keymap.set('n', '<A-j>', '<C-w>j')
+
+-- Switch between tabs.
+vim.keymap.set('n', '<leader>1', '1gt')
+vim.keymap.set('n', '<leader>2', '2gt')
+vim.keymap.set('n', '<leader>3', '3gt')
+vim.keymap.set('n', '<leader>4', '4gt')
+vim.keymap.set('n', '<leader>5', '5gt')
+vim.keymap.set('n', '<leader>6', '6gt')
+vim.keymap.set('n', '<leader>7', '7gt')
+vim.keymap.set('n', '<leader>8', '8gt')
+vim.keymap.set('n', '<leader>9', '9gt')
+
+-- Navigate tabs by history.
+vim.keymap.set('n', '<leader>k', '<cmd>tabprevious<cr>')
+vim.keymap.set('n', '<leader>j', '<cmd>tabnext<cr>')
+
+-- Open tab to the left/right.
+vim.keymap.set('n', '<leader>h', 'gT')
+vim.keymap.set('n', '<leader>l', 'gt')
+
+-- Other tab stuff.
+vim.keymap.set('n', '<leader><tab>t', '<cmd>tabnew<cr>')
+vim.keymap.set('n', '<leader><tab>d', '<cmd>tabclose<cr>')
+
+-- Clear search highlighting with <esc>
+vim.keymap.set('n', '<esc>', '<cmd>noh<cr><esc>')
+
+-- Highlight the current word.
+vim.keymap.set('n', 'gw', '*N')
+
+-- Make `n` and `N` always go in the same direction, regardless of forwards o
+-- backwards searching (`/` or `?`).
+-- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
+vim.keymap.set('n', 'n', "'Nn'[v:searchforward]", { expr = true, desc = 'Next search result' })
+vim.keymap.set('x', 'n', "'Nn'[v:searchforward]", { expr = true, desc = 'Next search result' })
+vim.keymap.set('o', 'n', "'Nn'[v:searchforward]", { expr = true, desc = 'Next search result' })
+vim.keymap.set('n', 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev search result' })
+vim.keymap.set('x', 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev search result' })
+vim.keymap.set('o', 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev search result' })
+
+--
+-- Autocommands
+--
+
+-- https://www.lazyvim.org/configuration/general#auto-commands
+local function augroup(name)
+    return vim.api.nvim_create_augroup('config_' .. name, { clear = true })
 end
 
+-- Go to last location when opening a buffer.
+-- https://www.lazyvim.org/configuration/general#auto-commands
+vim.api.nvim_create_autocmd('BufReadPost', {
+    group = augroup('last_location'),
+    callback = function()
+        local mark = vim.api.nvim_buf_get_mark(0, '"')
+        local lcount = vim.api.nvim_buf_line_count(0)
+        if mark[1] > 0 and mark[1] <= lcount then
+            pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
+})
 
---
---
---
--- Attempt at a Lua init file (to be sourced when nvim is launched).
-
-----
----- Load packages/plugins.
----- Uses Paq: https://github.com/savq/paq-nvim
----- See bootstrap.lua for the automated setup.
-----
-
----- List of packages to install and manage.
-----
----- To install, run :PaqInstall.
---require 'paq' {
---    -- Paq should manage itself
---    'savq/paq-nvim';
-
---    -- Mason Package manager
---    'williamboman/mason.nvim';
---    'williamboman/mason-lspconfig.nvim';
-
---    'neovim/nvim-lspconfig';
-
---    'tpope/vim-commentary';  -- `gc` to comment/uncomment; useful as fuck.
---    'tpope/vim-surround';
-
---    -- Neat tool for aligning stuff by patterns.
---    'junegunn/vim-easy-align';
-
---    -- Fuzzy file finder.  Bind :FZF to a keybinding, like Alt + P.
---    --
---    -- See the following for good reading on how to use the plugin:
---    -- https://github.com/junegunn/fzf/blob/master/README-VIM.md
---    --
---    -- Also see https://github.com/junegunn/fzf.vim for some more inspiration
---    -- on what to do with the plugin.
---    --
---    -- Run `:call fzf#install()` to install the latest binary.
---    {'junegunn/fzf', run=vim.fn['fzf#install()']};
---    'junegunn/fzf.vim';
-
---    -- File tree explorer.
---    -- See the following for a primer on commands to bind:
---    -- https://github.com/preservim/nerdtree#frequently-asked-questions
---    'preservim/nerdtree';
-
---    --
---    -- Color schemes
---    --
---    'hachy/eva01.vim';
---    'folke/tokyonight.nvim';
---    'sainnhe/everforest';
---    'hoppercomplex/calvera-dark.nvim';
-
---    --
---    -- Haskell
---    --
---    'neovimhaskell/haskell-vim';
-
---    --
---    -- Rust
---    --
---    'simrat39/rust-tools.nvim';
---}
-
-
-----
----- Colors
-----
---vim.cmd [[ set background=dark ]]
-
---vim.cmd [[
---let g:everforest_background = 'hard'
---]]
-
---vim.cmd [[ colorscheme tokyonight-night ]]
----- require('calvera').set()
-
-----
----- Haskell
-----
-
---vim.cmd [[
---let g:haskell_enable_quantification = 1   ' to enable highlighting of `forall`
---let g:haskell_enable_recursivedo = 1      ' to enable highlighting of `mdo` and `rec`
---let g:haskell_enable_arrowsyntax = 1      ' to enable highlighting of `proc`
---let g:haskell_enable_pattern_synonyms = 1 ' to enable highlighting of `pattern`
---let g:haskell_enable_typeroles = 1        ' to enable highlighting of type roles
---let g:haskell_enable_static_pointers = 1  ' to enable highlighting of `static`
---let g:haskell_backpack = 1                ' to enable highlighting of backpack keywords
-
---let g:haskell_indent_if = 4
---let g:haskell_indent_case = 4
---let g:haskell_indent_let = 4
---let g:haskell_indent_before_where = 2
---let g:haskell_indent_after_bare_where = 2
---let g:haskell_indent_guard = 4
---let g:haskell_indent_in = 0
---let g:haskell_indent_case_alternative = 1
-
---let g:haskell_classic_highlighting = 1
---]]
-
-
-----
----- Add more stuff
-----
-
----- Set up Mason
---require('mason').setup()
-
-
-
-----
----- General LSP config.
-----
-
---local sign = function(opts)
---  vim.fn.sign_define(opts.name, {
---    texthl = opts.name,
---    text = opts.text,
---    numhl = ''
---  })
---end
-
---sign({name = 'DiagnosticSignError', text = '💩'})
---sign({name = 'DiagnosticSignWarn', text = '👿'})
---sign({name = 'DiagnosticSignHint', text = '🤓'})
---sign({name = 'DiagnosticSignInfo', text = '🧙'})
-
---vim.diagnostic.config({
---    virtual_text = true,
---    signs = true,
---    underline = true,
---    severity_sort = true,
---    -- float = {
---    --     source = 'always',
---    --     header = '',
---    --     prefix = '',
---    -- },
---})
-
-----vim.cmd([[
-----set signcolumn=yes
-----autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
-----]])
-
-----
----- Rust
-----
-
---local rt = require('rust-tools')
-
---rt.setup({
---  server = {
---    on_attach = function(_, bufnr)
---      -- Hover actions
---      vim.keymap.set('n', '<C-space>', rt.hover_actions.hover_actions, { buffer = bufnr })
---      -- Code action groups
---      vim.keymap.set('n', '<Leader>a', rt.code_action_group.code_action_group, { buffer = bufnr })
---    end,
---  },
---})
+-- Close some window tyeps with <q>
+-- https://www.lazyvim.org/configuration/general#auto-commands
+vim.api.nvim_create_autocmd('FileType', {
+  group = augroup('close_with_q'),
+  pattern = {
+    'PlenaryTestPopup',
+    'help',
+    'lspinfo',
+    'man',
+    'notify',
+    'qf',
+    'spectre_panel',
+    'startuptime',
+    'tsplayground',
+  },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+  end,
+})
