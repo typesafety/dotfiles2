@@ -106,11 +106,13 @@ require('lazy').setup(plugins)
 require('plugins/haskell-tools_nvim')
 require('plugins/nvim-lspconfig')
 require('plugins/mini_comment')
-require('plugins/null-ls_nvim')
 require('plugins/nvim-cmp')
 require('plugins/nvim-treesitter')
 require('plugins/nvim-ts-context-commentstring')
 require('plugins/tokyonight_nvim')
+
+-- TODO: Displays an empty error diagnostic at the top of files for some reason.
+-- require('plugins/null-ls_nvim')
 
 --
 -- Set normal settings
@@ -187,7 +189,10 @@ vim.opt.smartindent = true
 -- Keep undo history after closing the buffer.
 vim.opt.undofile = true
 vim.opt.undolevels = 10000
-vim.opt.updatetime = 5000
+
+-- Time of idling (in ms) until swap file is written and CursorHold event is
+-- triggered.
+vim.opt.updatetime = 500
 
 -- Wrapping of long lines.
 vim.opt.wrap = true
@@ -272,7 +277,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end,
 })
 
--- Close some window tyeps with <q>
+-- Close some window tyeps with <esc>.
 -- https://www.lazyvim.org/configuration/general#auto-commands
 vim.api.nvim_create_autocmd('FileType', {
   group = augroup('close_with_q'),
@@ -289,6 +294,6 @@ vim.api.nvim_create_autocmd('FileType', {
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+    vim.keymap.set('n', '<esc>', '<cmd>close<cr>', { buffer = event.buf, silent = true })
   end,
 })

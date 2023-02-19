@@ -11,35 +11,88 @@ end, {})
 local selection_range_capabilities = deps.if_available('lsp-selection-range', function(lsp_selection_range)
     return lsp_selection_range.update_capabilities {}
 end, {})
-local capabilities = vim.tbl_deep_extend('keep', ht_capabilities, cmp_capabilities, selection_range_capabilities)
+local capabilities = vim.tbl_deep_extend(
+    'keep',
+    ht_capabilities,
+    cmp_capabilities, selection_range_capabilities
+)
+
+-- Open diagnostics float for symbol.
+vim.keymap.set('n', 'L', vim.diagnostic.open_float, def_opts)
+
+-- Go to next/prev diagnostics.
+vim.keymap.set('n', '<C-k>', vim.diagnostic.goto_prev, def_opts)
+vim.keymap.set('n', '<C-j>', vim.diagnostic.goto_next, def_opts)
+
+vim.keymap.set('n', '<space>ll', vim.diagnostic.setloclist, def_opts)
+
+
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
 
 local function on_attach(client_id, bufnr)
     local opts = vim.tbl_extend('keep', def_opts, { buffer = bufnr, })
     -- haskell-language-server relies heavily on codeLenses,
     -- so auto-refresh (see advanced configuration) is enabled by default
-    vim.keymap.set('n', '<leader>ca', vim.lsp.codelens.run, opts)
-    vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
-    vim.keymap.set('n', '<leader>ea', ht.lsp.buf_eval_all, opts)
 
-    -- Mappings.
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    -- haskell-tools mappings.
+    vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
+    vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
+    vim.keymap.set('n', '<leader>eva', ht.lsp.buf_eval_all, opts)
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-    vim.keymap.set('n', '<leader>wl', function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, bufopts)
-    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+    -- nvim LSP mappings
+    -- See `:help vim.lsp.*` for documentation on any of the below functions,
+    -- or https://neovim.io/doc/user/lsp.html.
+
+    -- Show available code actions.
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-    vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+
+    -- Go to definition.
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+
+    -- Activate document highlights when cursor is idle over a name.
+    -- Clear highlights once the cursor is moved.
+    vim.api.nvim_create_autocmd({'CursorHold'}, {
+        pattern = '<buffer>',
+        callback = function(event)
+            vim.lsp.buf.document_highlight()
+        end,
+    })
+    vim.api.nvim_create_autocmd({'CursorMoved'}, {
+        pattern = '<buffer>',
+        callback = function(event)
+            vim.lsp.buf.clear_references()
+        end
+    })
+
+    -- List all symbols in the current buffer in the quickfix window.
+    vim.keymap.set('n', '<leader>sy', vim.lsp.buf.document_symbol, bufopts)
+
+    -- Format the buffer, or a selection if in visual mode.
+    vim.keymap.set('n', '<leader>fo', function() vim.lsp.buf.format({ async = true }) end, bufopts)
+
+    -- Display hover information about the symbol under the cursor.
+    -- Information shows up in a floating window.
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+
+    -- List call sites of the symbol under cursor in the quickfix window.
+    vim.keymap.set('n', '<leader>cs', vim.lsp.buf.incoming_calls, bufopts)
+
+    -- List refernces to the symbol under the cursor
+    vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, bufopts)
+
 end
 
 ht.setup {
@@ -48,7 +101,7 @@ ht.setup {
             level = vim.log.levels.DEBUG,
         },
         codeLens = {
-            autoRefresh = false,
+            autoRefresh = true,
         },
         hoogle = {
             mode= 'auto',
@@ -71,15 +124,20 @@ ht.setup {
             return ht.lsp.load_hls_settings(project_root)
         end,
 
-        filetypes = { 'haskell', 'lhaskell', 'cabal' },
+        filetypes = { 'haskell', 'lhaskell' },
+        -- Can't use cabal for some reason, get error:
+        -- "No plugin enabled for STextDocumentDocumentHighlight, available:
+        -- ghcide-hover-and-symbols", even if the plugin is enabled.
 
         default_settings = {
             haskell = {
+                cabalFormattingProvider = 'cabalfmt',
+                formattingProvider = 'fourmolu',
                 plugin = {
                     importLens = {
                         globalOn = false,
                     },
-                },
+                }
             }
         }
     },
