@@ -67,7 +67,7 @@ end, def_opts)
 vim.keymap.set('n', '<C-k>', vim.diagnostic.goto_prev, def_opts)
 vim.keymap.set('n', '<C-j>', vim.diagnostic.goto_next, def_opts)
 
-vim.keymap.set('n', '<space>ll', vim.diagnostic.setloclist, def_opts)
+vim.keymap.set('n', '<leader>zl', vim.diagnostic.setloclist, def_opts)
 
 local function on_attach(client_id, bufnr)
     local opts = vim.tbl_extend('keep', def_opts, { buffer = bufnr, })

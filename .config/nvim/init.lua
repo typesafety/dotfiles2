@@ -68,6 +68,42 @@ local plugins = {
 
     -- Utils
     {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
+    },
+    {
+        'nvim-telescope/telescope.nvim',
+        branch = '0.1.x',
+        dependencies = {
+            {
+                'nvim-lua/plenary.nvim',
+            },
+        },
+    },
+    {
+        'ms-jpq/chadtree',
+        branch = chad,
+        -- Requires python and virtualenv to be installed.
+        build = 'python3 -m chadtree deps',
+    },
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = {
+            {
+                'kyazdani42/nvim-web-devicons',
+            },
+        },
+    },
+    -- Set this up sometiem
+    -- {
+    --     'SmiteshP/nvim-navic',
+    --     dependencies = {
+    --         {
+    --             'neovim/nvim-lspconfig',
+    --         },
+    --     }
+    -- },
+    {
         'echasnovski/mini.comment',
         version = false,
     },
@@ -75,14 +111,6 @@ local plugins = {
         'JoosepAlviste/nvim-ts-context-commentstring',
         dependencies = {
             'nvim-treesitter/nvim-treesitter',
-        },
-    },
-    {
-        'nvim-telescope/telescope.nvim',
-        dependencies = {
-            {
-                'nvim-lua/plenary.nvim',
-            },
         },
     },
 
@@ -102,12 +130,15 @@ require('lazy').setup(plugins)
 -- Load plugins.  Each plugin file should define settings for it.
 --
 
+require('plugins/chadtree')
 require('plugins/haskell-tools_nvim')
-require('plugins/nvim-lspconfig')
+require('plugins/lualine_nvim')
 require('plugins/mini_comment')
 require('plugins/nvim-cmp')
+require('plugins/nvim-lspconfig')
 require('plugins/nvim-treesitter')
 require('plugins/nvim-ts-context-commentstring')
+require('plugins/telescope_nvim')
 require('plugins/tokyonight_nvim')
 
 -- TODO: Displays an empty error diagnostic at the top of files for some reason.
@@ -144,8 +175,8 @@ vim.opt.splitbelow = true
 -- Incremental highlighting for commands.
 vim.opt.inccommand = 'split'
 
--- Don't want to automatically insert comment leaders after using `o` in
--- normal mode.  Doesn't work without the autocmd for some freak reason.
+-- Don't want to automatically insert comment leaders after using `o` in normal
+-- mode.  Doesn't work without the autocmd for some freak reason.
 vim.cmd [[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o formatoptions+=j formatoptions+=q]]
 
 -- Highlight curent line
@@ -177,8 +208,8 @@ vim.opt.grepprg = "rg --vimgrep"  -- Requires ripgrep
 vim.opt.number = true
 vim.opt.relativenumber = true
 
--- Hide the mode since we have a statusline.
-vim.opt.showmode = true  -- Change to `false` once a statusline is installed.
+-- Hide the mode since we have a statusline showing the mode instead.
+vim.opt.showmode = false
 
 -- Always show the sign column to avoid the screen skip left and right.
 vim.opt.signcolumn = 'yes'
@@ -203,11 +234,11 @@ vim.g.markdown_recommended_style = 0
 -- Keymaps
 --
 
--- Open Lazy menu
+-- Open Lazy menu.
 vim.keymap.set('n', '<leader>L', '<cmd>Lazy<cr>')
 
--- Reload the config.
-vim.keymap.set('n', '<leader>re', '<cmd>source ~/.config/nvim/init.lua<cr>')
+-- Clear the quickfix list.
+vim.keymap.set('n', '<leader>zz', [[<cmd>call setqflist([])<cr>]])
 
 -- Switch between windows.
 vim.keymap.set('n', '<A-l>', '<C-w>l')
