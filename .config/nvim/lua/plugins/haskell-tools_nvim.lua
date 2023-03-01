@@ -78,7 +78,7 @@ local function on_attach(client_id, bufnr)
     -- haskell-tools mappings.
     --
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
-    vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
+    vim.keymap.set('n', '<leader>zh', ht.hoogle.hoogle_signature, opts)
     vim.keymap.set('n', '<leader>eva', ht.lsp.buf_eval_all, opts)
 
     --
@@ -126,7 +126,7 @@ local function on_attach(client_id, bufnr)
     vim.keymap.set('n', '<leader>cs', vim.lsp.buf.incoming_calls, bufopts)
 
     -- List refernces to the symbol under the cursor
-    vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set('n', '<leader>zr', vim.lsp.buf.references, bufopts)
 
 end
 

@@ -19,6 +19,14 @@ cmp.setup({
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
 
+        -- Best bindings
+        ['<C-k>'] = cmp.mapping(function(fallback)
+            cmp.select_prev_item()
+        end),
+        ['<C-j>'] = cmp.mapping(function(fallback)
+            cmp.select_next_item()
+        end),
+
         -- Accept currently selected item. Set `select` to `false` to only
         -- confirm explicitly selected items.
         ['<Tab>'] = cmp.mapping.confirm({ select = true }),
