@@ -67,9 +67,9 @@ alias cp="cp -i"
 alias mv="mv -i"
 
 # ls aliases
-alias ll="ls -Ahl"
-alias l="ls -Ghl"
-alias la="ls -Acltr"
+alias ll="ls -AFhl"
+alias l="ls -GFhl"
+alias la="ls -AFcltr"
 
 # cabal
 alias crepl="cabal repl"
