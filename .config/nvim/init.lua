@@ -2,7 +2,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Make the normal behavior of space a noop.
+-- Since space is now the leader key, make its command a noop.
 vim.keymap.set('n', '<space>', '<nop>')
 
 -- Bootstrapping the package manager, if needed.
@@ -33,14 +33,6 @@ local plugins = {
         build = ':TSUpdate',
     },
     {
-        'jose-elias-alvarez/null-ls.nvim',
-        dependencies = {
-            {
-                'nvim-lua/plenary.nvim',
-            },
-        },
-    },
-    {
         'hrsh7th/nvim-cmp',
         dependencies = {
             {
@@ -66,7 +58,18 @@ local plugins = {
         'folke/tokyonight.nvim',
     },
 
-    -- Utils
+    -- Git
+    {
+        'sindrets/diffview.nvim',
+        dependiencies = {
+            'nvim-lua/plenary.nvim',
+        },
+    },
+    {
+        'lewis6991/gitsigns.nvim',
+    },
+
+    -- Other utils
     {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
@@ -94,15 +97,6 @@ local plugins = {
             },
         },
     },
-    -- Set this up sometiem
-    -- {
-    --     'SmiteshP/nvim-navic',
-    --     dependencies = {
-    --         {
-    --             'neovim/nvim-lspconfig',
-    --         },
-    --     }
-    -- },
     {
         'echasnovski/mini.comment',
         version = false,
@@ -113,15 +107,16 @@ local plugins = {
             'nvim-treesitter/nvim-treesitter',
         },
     },
-
-    -- Language-specific
     {
-        'mrcjkb/haskell-tools.nvim',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
-        },
-    },
+        'kylechui/nvim-surround',
+        version = '*',  -- Use for stability; omit to use `main` branch for the latest features
+        event = 'VeryLazy',
+        config = function()
+            require('nvim-surround').setup({
+                -- Configuration here, or leave empty to use defaults
+            })
+        end
+    }
 }
 
 require('lazy').setup(plugins)
@@ -131,7 +126,8 @@ require('lazy').setup(plugins)
 --
 
 require('plugins/chadtree')
-require('plugins/haskell-tools_nvim')
+require('plugins/diffview_nvim')
+require('plugins/gitsigns_nvim')
 require('plugins/lualine_nvim')
 require('plugins/mini_comment')
 require('plugins/nvim-cmp')
@@ -141,12 +137,11 @@ require('plugins/nvim-ts-context-commentstring')
 require('plugins/telescope_nvim')
 require('plugins/tokyonight_nvim')
 
--- TODO: Displays an empty error diagnostic at the top of files for some reason.
--- require('plugins/null-ls_nvim')
-
 --
 -- Set normal settings
 --
+
+-- For options, see: https://neovim.io/doc/user/options.html
 
 -- Color scheme.
 vim.opt.termguicolors = true
@@ -230,9 +225,24 @@ vim.opt.wrap = true
 -- This is good supposedly.
 vim.g.markdown_recommended_style = 0
 
+-- Always show some lines around the cursor.
+vim.opt.scrolloff = 3
+
+-- When switching buffers, prioritise:
+-- 1. An open window containing the target buffer.
+-- 2. An open tab containing the target buffer.
+vim.opt.switchbuf = {'useopen'; 'usetab'}
+
+-- Display the current buffer in the terminal emulator window title.
+-- vim.opt.title = true
+
 --
 -- Keymaps
 --
+
+-- Make <Ctrl-e> and <Ctrl-Y> work the same in insert mode as in normal mode.
+vim.keymap.set('i', '<C-e>', '<C-x><C-e>')
+vim.keymap.set('i', '<C-y>', '<C-x><C-y>')
 
 -- Open Lazy menu.
 vim.keymap.set('n', '<leader>L', '<cmd>Lazy<cr>')
@@ -275,6 +285,10 @@ vim.keymap.set('n', '<esc>', '<cmd>noh<cr><esc>')
 -- Highlight the current word.
 vim.keymap.set('n', 'gw', '*N')
 
+-- When jumping to a tag, open it in a new tab.
+-- Use together with `:set switchbuf=useopen,usetab`
+vim.keymap.set('n', '<leader><C-]>', '<C-w><C-]><C-w>T')
+
 -- Make `n` and `N` always go in the same direction, regardless of forwards o
 -- backwards searching (`/` or `?`).
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
@@ -307,7 +321,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end,
 })
 
--- Close some window tyeps with <esc>.
+-- Close some window types with <esc>.
 -- https://www.lazyvim.org/configuration/general#auto-commands
 vim.api.nvim_create_autocmd('FileType', {
     group = augroup('close_with_esc'),
