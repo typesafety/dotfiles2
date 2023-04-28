@@ -52,6 +52,13 @@ local plugins = {
             },
         },
     },
+    {
+        'williamboman/mason.nvim',
+        build = ':MasonUpdate',
+    },
+    {
+        'williamboman/mason-lspconfig.nvim',
+    },
 
     -- Colors
     {
@@ -70,6 +77,17 @@ local plugins = {
     },
 
     -- Other utils
+    {
+        'nanozuki/tabby.nvim',
+    },
+    {
+        'ThePrimeagen/harpoon',
+        dependencies = {
+            {
+                'nvim-lua/plenary.nvim',
+            },
+        },
+    },
     {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
@@ -125,6 +143,39 @@ require('lazy').setup(plugins)
 -- Load plugins.  Each plugin file should define settings for it.
 --
 
+-- mason.nvim & mason-lspconfig.nvim
+-- https://github.com/williamboman/mason.nvim
+-- https://github.com/williamboman/mason-lspconfig.nvim
+--
+-- Note the order that the plugins must be loaded in (mason-lspconfig README):
+-- 1. mason
+-- 2. mason-lspconfig
+-- 3. nvim-lspconfig
+
+require('mason').setup()
+require('mason-lspconfig').setup()
+
+-- harpoon
+-- https://github.com/ThePrimeagen/harpoon#readme
+
+local harpoon = require('harpoon').setup({
+    menu = {
+        width = vim.api.nvim_win_get_width(0) - 50,
+    }
+})
+local harpoon_ui = require('harpoon.ui')
+local harpoon_mark = require('harpoon.mark')
+
+vim.keymap.set('n', '<C-h>', harpoon_ui.toggle_quick_menu)
+vim.keymap.set('n', '<C-m>', harpoon_mark.add_file)
+
+-- tabby.nvim
+-- https://github.com/nanozuki/tabby.nvim
+
+local tabby = require('tabby.tabline')
+tabby.use_preset('active_wins_at_tail')
+
+
 require('plugins/chadtree')
 require('plugins/diffview_nvim')
 require('plugins/gitsigns_nvim')
@@ -178,7 +229,7 @@ vim.cmd [[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatop
 vim.opt.cursorline = true
 
 -- Rulers
-vim.opt.colorcolumn = {80; 120}
+vim.opt.colorcolumn = {80; 100; 120}
 
 -- Show interesting whitespace characters.
 -- (TODO: these don't work, font issue?)
@@ -226,7 +277,7 @@ vim.opt.wrap = true
 vim.g.markdown_recommended_style = 0
 
 -- Always show some lines around the cursor.
-vim.opt.scrolloff = 3
+vim.opt.scrolloff = 1
 
 -- When switching buffers, prioritise:
 -- 1. An open window containing the target buffer.
@@ -239,6 +290,10 @@ vim.opt.switchbuf = {'useopen'; 'usetab'}
 --
 -- Keymaps
 --
+
+-- Copy full path of file open in current buffer to the the clipboard
+-- (unnamedplus).
+vim.cmd([[nmap <leader>cp :let @+ = expand("%:p")<cr>]])
 
 -- Make <Ctrl-e> and <Ctrl-Y> work the same in insert mode as in normal mode.
 vim.keymap.set('i', '<C-e>', '<C-x><C-e>')
