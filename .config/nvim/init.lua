@@ -67,12 +67,6 @@ local plugins = {
 
     -- Git
     {
-        'sindrets/diffview.nvim',
-        dependiencies = {
-            'nvim-lua/plenary.nvim',
-        },
-    },
-    {
         'lewis6991/gitsigns.nvim',
     },
 
@@ -177,7 +171,6 @@ tabby.use_preset('active_wins_at_tail')
 
 
 require('plugins/chadtree')
-require('plugins/diffview_nvim')
 require('plugins/gitsigns_nvim')
 require('plugins/lualine_nvim')
 require('plugins/mini_comment')
