@@ -284,6 +284,17 @@ vim.opt.switchbuf = {'useopen'; 'usetab'}
 -- Keymaps
 --
 
+-- Make <leader>-prefixed yank/put use the system clipboard (unnamedplus).
+vim.keymap.set('n', '<leader>y', '"+y')
+vim.keymap.set('v', '<leader>y', '"+y')
+vim.keymap.set('n', '<leader>p', '"+p')
+vim.keymap.set('v', '<leader>p', '"+p')
+
+-- Copy the relative/full path of the file open in current buffer to the the
+-- system clipboard (unnamedplus).  See `:h expand`.
+vim.cmd([[nmap <leader>cp :let @+ = expand("%")<cr>]])    -- relative path
+vim.cmd([[nmap <leader>cP :let @+ = expand("%:p")<cr>]])  -- full path
+
 -- Copy full path of file open in current buffer to the the clipboard
 -- (unnamedplus).
 vim.cmd([[nmap <leader>cp :let @+ = expand("%:p")<cr>]])
