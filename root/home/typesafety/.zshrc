@@ -23,7 +23,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 zstyle ':omz:update' frequency 13
 
 # Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
+DISABLE_MAGIC_FUNCTIONS="true"
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -66,7 +66,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 #
 
-## PATH
+## PATH and paths
 
 export PATH="$PATH:$HOME/.local/bin"
 
@@ -82,11 +82,23 @@ export EDITOR='nvim'
 
 ## Aliases
 
-alias ll='ls -AhlF'
-alias l='ls -GlhF'
+# ls aliases
+alias ll="ls -AFhl"
+alias l="ls -GFhl"
+alias la="ls -AFcltr"
 
 alias scl='systemctl'
 alias jcl='journalctl'
 
 alias nread='nvim -R'
+
+# Make rm/cp/mv a bit safer
+alias rm="rm -I"
+alias cp="cp -i"
+alias mv="mv -i"
+
+## Bootstrapping
+
+# ghcup
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
