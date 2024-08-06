@@ -9,17 +9,17 @@ require("tokyonight").setup({
     styles = {
         comments = { italic = false },
         keywords = { italic = false },
-	functions = {},
-	variables = {},
+        functions = {},
+        variables = {},
 
-	sidebars = "moon",
-	floats = "moon",
+        sidebars = "moon",
+        floats = "moon",
     },
 
     sidebars = {
         "qf",
         "help",
-	"Lazy",
-	"terminal",
+        "Lazy",
+        "terminal",
     },
 })

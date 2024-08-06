@@ -142,17 +142,12 @@ require('mason').setup()
 require('mason-lspconfig').setup()
 require('plugins/nvim-lspconfig')
 
--- tabby.nvim
--- https://github.com/nanozuki/tabby.nvim
-
-local tabby = require('tabby.tabline')
-tabby.use_preset('active_wins_at_tail')
-
 require('plugins/gitsigns_nvim')
 require('plugins/lualine_nvim')
 require('plugins/mini_comment')
 require('plugins/nvim-treesitter')
 require('plugins/nvim-ts-context-commentstring')
+require('plugins/tabby')
 require('plugins/telescope_nvim')
 require('plugins/tokyonight_nvim')
 
@@ -200,9 +195,8 @@ vim.opt.cursorline = true
 vim.opt.colorcolumn = {80; 100; 120}
 
 -- Show interesting whitespace characters.
--- (TODO: these don't work, font issue?)
 vim.opt.list = true
-vim.opt.listchars['trail'] = '·'
+vim.opt.listchars['trail'] = '·'  -- (TODO: these don't work, font issue?)
 vim.opt.listchars['tab'] = '›'
 
 vim.opt.ignorecase = true
