@@ -69,6 +69,10 @@ source $ZSH/oh-my-zsh.sh
 ## PATH and paths
 
 export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:/snap/bin"
+
+# ghcup
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"  # ghcup-env
 
 ## vi-mode plugin settings
 
@@ -96,9 +100,4 @@ alias nread='nvim -R'
 alias rm="rm -I"
 alias cp="cp -i"
 alias mv="mv -i"
-
-## Bootstrapping
-
-# ghcup
-[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
