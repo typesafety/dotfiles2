@@ -1,0 +1,186 @@
+{
+    "search.usePCRE2": true,
+    "[html]": {
+        "editor.tabSize": 2,
+    },
+    "[haskell]": {
+        "editor.tabSize": 4,
+    },
+
+    // Needed for vim to use caps as escape
+    "keyboard.dispatch": "keyCode",
+
+    "editor.fontSize": 18,
+    "editor.rulers": [
+        80,
+        100,
+        120
+    ],
+
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.dragAndDrop": false,
+    "editor.emptySelectionClipboard": false,
+    "editor.fontFamily": "IosevkaTermSlab Nerd Font, Hack, monospace",
+    "editor.indentSize": "tabSize",
+    "editor.largeFileOptimizations": false,
+    "editor.minimap.enabled": false,
+    "editor.mouseWheelScrollSensitivity": 2,
+    "editor.quickSuggestionsDelay": 10,
+    "editor.renderWhitespace": "trailing",
+    "editor.selectionClipboard": false,
+    "editor.tabCompletion": "off",
+    "editor.tabSize": 4,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.nonBasicASCII": false,
+
+    "terminal.integrated.fontSize": 20,
+
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+
+    "html.autoClosingTags": false,
+
+    "window.zoomLevel": 1,
+
+    "workbench.colorTheme": "Shades of Purple (Super Dark)",
+    "workbench.commandPalette.history": 100,
+    "workbench.editor.wrapTabs": true,
+    "workbench.list.smoothScrolling": true,
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.settings.applyToAllProfiles": [
+        "files.trimTrailingWhitespace"
+    ],
+
+    //
+    // Extensions
+    //
+
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1
+    },
+    "extensions.ignoreRecommendations": false,
+
+    "bazel.buildifierExecutable": "/home/s1000851/.local/bin/buildifier",
+    "bazel.buildifierFixOnFormat": true,
+    "bazel.enableCodeLens": true,
+    "bazel.executable": "bazelisk",
+    "bazel.lsp.args": ["--bazel", "bazelisk"],
+    "bazel.lsp.command": "bazel-lsp",
+
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.cacheLSPData": true,
+    "python.analysis.generateWithTypeAnnotation": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.languageServerMode": "full",
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.userFileIndexingLimit": 5000,
+    "python.analysis.exclude": [
+        "bazel-bin, bazel-src, bazel-out, bazel-testlogs, **/__pycache__, .git"
+    ],
+    "python.analysis.extraPaths": [
+        "stringent, frameworks"
+    ],
+
+    "vim.easymotion": true,
+    "vim.enableNeovim": true,
+    "vim.foldfix": true,
+    "vim.highlightedyank.duration": 50,
+    "vim.highlightedyank.enable": true,
+    "vim.history": 150,
+    "vim.incsearch": false,
+    "vim.leader": "<space>",
+    "vim.neovimPath": "/home/s1000851/.local/bin/nvim",
+    "vim.overrideCopy": false,
+    "vim.replaceWithRegister": true,
+    "vim.startofline": false,
+    "vim.vimrc.enable": true,
+    "vim.vimrc.path": "~/.vimrc",
+    "vim.visualstar": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [ "<leader>", "y" ],
+            "after": [ "\"", "+", "y" ]
+        },
+        {
+            "before": [ "<leader>", "p" ],
+            "after": [ "\"", "+", "p" ]
+        },
+        {
+            "before": [ "<leader>", "d" ],
+            "after": [ "\"", "+", "d" ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [ "<leader>", "y" ],
+            "after": [ "\"", "+", "y" ]
+        },
+        {
+            "before": [ "<leader>", "p" ],
+            "after": [ "\"", "+", "p" ]
+        },
+        {
+            "before": [ "<leader>", "d" ],
+            "after": [ "\"", "+", "d" ]
+        }
+    ],
+    "git.openRepositoryInParentFolders": "never",
+
+    "search.exclude": {
+        "**/__pycache__/**": true,
+        "build/**": true,
+        "bazel-*/**": true,
+        "**/.vscode/**": true,
+        "**/.vs/**": true,
+        "**/.git/**": true,
+        "/": true,
+    },
+    "files.exclude": {
+        "**/__pycache__/**": true,
+        "build/**": true,
+        "bazel-*/**": true,
+        "**/.vscode/**": true,
+        "**/.vs/**": true,
+        "**/.git/**": true,
+        "/": true,
+    },
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "**/.idea/**": true,
+        "**/.vs/**": true,
+        "**/.vscode/**": true,
+        "**/__pycache__/**": true,
+        "/": true,
+        "bazel-*/**": true,
+        "build/**": true,
+        "tmp/**": true,
+    },
+    "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
+    "C_Cpp.codeAnalysis.exclude": {
+        "**/__pycache__/**": true,
+        "build/**": true,
+        "bazel-*/**": true,
+        "**/.vscode/**": true,
+        "**/.vs/**": true,
+        "**/.git/**": true,
+        "/": true,
+    },
+    "C_Cpp.files.exclude": {
+        "**/__pycache__/**": true,
+        "build/**": true,
+        "bazel-*/**": true,
+        "**/.vscode/**": true,
+        "**/.vs/**": true,
+        "**/.git/**": true,
+        "/": true,
+    },
+    "svelte.enable-ts-plugin": true,
+    "gitlens.codeLens.enabled": false,
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        }
+    },
+}
