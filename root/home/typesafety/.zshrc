@@ -101,3 +101,36 @@ alias rm="rm -I"
 alias cp="cp -i"
 alias mv="mv -i"
 
+# Git aliases
+alias gdh="git diff HEAD^ HEAD"
+alias gdhno="git diff HEAD^ HEAD --name-only"
+alias gdhns="git diff HEAD^ HEAD --name-status"
+alias gdno="git diff --name-only"
+alias gdns="git diff --name-status"
+alias ggr="git grep"
+alias gcpf="git_cherrypick_files"
+alias grevf="git_revert_files"
+
+## Functions
+
+## Revert specific files.  Use $1=HEAD to revert changes from current commit.
+##
+## Usage:
+##  git_revert_files HEAD file1 file2
+function git_revert_files {
+    local revision="$1"
+
+    git show -R $revision -- ${@: 2} | git apply -
+}
+
+## Cherry-pick specific files.
+##
+## Usage:
+##  git_cherrypick_files <REVISION> file1 file2
+function git_cherrypick_files {
+    local revision="$1"
+    local rest="${@:2}"
+
+    git show $revision -- $rest | git apply -
+}
+
