@@ -1,0 +1,2 @@
+# "ll" to always show lines around the current statement
+alias ll u;;d;;l
