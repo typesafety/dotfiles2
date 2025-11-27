@@ -1,0 +1,33 @@
+# This is Git's per-user configuration file.
+[color "status"]
+    changed = magenta bold
+    untracked = magenta bold
+    added = cyan bold
+
+[color "branch"]
+    current = cyan bold
+
+[color "diff"]
+    old = yellow bold
+    new = cyan bold
+
+[color]
+	ui = auto
+
+[pull]
+	rebase = merges
+
+[core]
+	pager = diff-so-fancy | less --tabs=4 -RF
+
+[interactive]
+	diffFilter = diff-so-fancy --patch
+
+[rerere]
+    enable = true
+
+[alias]
+    last = "!f() { git log --max-count=\"$1\" HEAD; }; f"
+    unstage = "restore --staged --"
+    greplace = "!f() { git grep -l \"$1\" $GIT_PREFIX | xargs -n1 sed -i \"s#$1#$2#g\"; }; f"
+    remaster = "!f() { git switch master && git stash && git reset --hard origin/master && git pull; }; f"
